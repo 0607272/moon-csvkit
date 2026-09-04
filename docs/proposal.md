@@ -1,33 +1,45 @@
-# moon-csvkit 项目申报书
+# Hackathon 2026 Proposal: NyaCSV Maintenance and Strict Validation
 
-## 项目简介
+## Project and maintenance direction
 
-`moon-csvkit` 是一个以 MoonBit 为主要实现语言的 CSV 解析与转换工具库，提供 RFC 4180 风格解析、严格数据校验、格式化，以及 CSV 与 JSON Lines 的转换，并配套可运行的命令行入口。
+This submission targets the existing MoonBit community project
+[`moonbit-community/NyaCSV`](https://github.com/moonbit-community/NyaCSV),
+version 0.3.3, under the hackathon direction "existing ecosystem project
+maintenance and upgrade". NyaCSV already provides CSV parsing from strings,
+buffers, and bytes, configurable delimiters and quoting, multiline fields,
+headers, and formatted output. Its README explicitly welcomes issues and pull
+requests.
 
-## 项目价值与生态定位
+The goal is not to publish a duplicate CSV library. It is to contribute a
+focused strict-validation layer upstream while preserving the existing API and
+behavior.
 
-CSV 在数据交换中很常见，但直接按换行和逗号切分会错误处理引号、逗号和字段内换行。MoonBit 项目需要一个轻量、可复用、可测试的基础组件来处理这类输入。当前项目聚焦一个边界清晰的生态位：为 MoonBit 应用和脚本提供可靠 CSV 基础能力，不引入数据库或复杂分析引擎。
+## Maintenance goals during the competition
 
-## 预期使用场景
+1. Add `CSV::parse_string_strict`, returning `Result[CSV, CSVParseError]`.
+2. Report malformed quoting and ragged records instead of silently accepting
+   them, with a stable error message and one-based line/column location.
+3. Keep the existing `CSV::parse_string`, `parse_buffer`, and `parse_bytes`
+   APIs compatible for permissive callers.
+4. Add regression tests for unterminated quotes, illegal characters after a
+   closing quote, inconsistent field counts, CRLF, multiline fields, and valid
+   escaped quotes.
+5. Update the upstream README with the strict API and migration guidance.
+6. Publish public, reviewable commits and an upstream Issue/PR; record links
+   and review outcomes here as they become available.
 
-1. 在导入数据前检查列数、引号和换行错误。
-2. 将 CSV 表格转换为 JSON Lines，接入逐行处理管道。
-3. 将 JSON Lines 按指定表头顺序转换回 CSV。
-4. 在项目构建或数据发布流程中统一 CSV 格式化结果。
+## Verification and deliverables
 
-## 交付范围
+- MoonBit source and tests are the primary implementation.
+- `moon fmt --check`, `moon test`, `moon build`, and CI are required before
+  submitting the PR.
+- The contribution retains NyaCSV's Apache-2.0 license and does not copy code
+  from unrelated CSV projects.
+- The local `moon-csvkit` repository is only a reproducible work log and
+  validation harness; the actual feature is prepared as a patch against NyaCSV
+  for upstream review.
 
-- 状态机 CSV 解析器：引号字段、嵌入逗号/换行、双引号转义、CRLF、空字段和列数校验。
-- 表头映射和 JSON Lines 编解码，保持字段顺序并报告非法输入。
-- `check`、`format`、`to-jsonl`、`from-jsonl` 命令。
-- README、可运行示例、单元/命令测试、CI 和 MIT 许可证。
-- 发布到 `mooncakes.io`，并记录公开 commits、测试和更新日志。
+## Out of scope
 
-明确不做：SQL 查询、复杂类型推断、网络服务、图形界面和大规模并行计算。
-
-## 实现路径
-
-解析器使用显式状态机，避免按行切分破坏字段内换行；编解码层复用解析器，不重复实现 CSV 语法；CLI 只负责参数、输出和错误码。测试覆盖规范输入、边界输入、往返转换和命令错误路径。
-
-项目为原创实现，不直接复制其他项目源代码；如参考 CSV 行为规范或第三方接口，将在 README 中记录来源和许可证。
-
+No new CSV package, SQL engine, network service, GUI, type inference system,
+or unrelated refactor is proposed.
