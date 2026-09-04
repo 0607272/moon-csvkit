@@ -24,7 +24,7 @@ Install MoonBit, then run:
 moon fmt
 moon test
 moon info
-moon run cmd/main -- check
+moon run cmd/main -- check "name,age\nAda,36\n"
 ```
 
 The project is developed in public with meaningful commits and tests. Contributions should include a focused test and preserve the MIT license and third-party attribution requirements.
