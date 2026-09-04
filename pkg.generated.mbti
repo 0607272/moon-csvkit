@@ -1,0 +1,16 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "0607272/moon-csvkit"
+
+// Values
+pub fn parse(String) -> Result[Array[Array[String]], String]
+
+pub fn serialize(Array[Array[String]]) -> String
+
+// Errors
+
+// Types and methods
+
+// Type aliases
+pub type CsvError = String
+
+// Traits
