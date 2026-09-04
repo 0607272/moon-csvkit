@@ -96,6 +96,15 @@ pub fn from_jsonl(
 ///|
 /// Parse a basic comma-separated document into rows.
 pub fn parse(input : String) -> Result[Array[Array[String]], CsvError] {
+  parse_with_options(input, strict=true)
+}
+
+///|
+/// Parse CSV with optional strict column-count validation.
+pub fn parse_with_options(
+  input : String,
+  strict~ : Bool,
+) -> Result[Array[Array[String]], CsvError] {
   let chars = input.to_array()
   let rows = []
   let mut row = []
@@ -166,7 +175,7 @@ pub fn parse(input : String) -> Result[Array[Array[String]], CsvError] {
     row.push(field.to_string())
     rows.push(row)
   }
-  if rows.length() > 0 {
+  if strict && rows.length() > 0 {
     let expected = rows[0].length()
     for parsed_row in rows {
       if parsed_row.length() != expected {

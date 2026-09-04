@@ -8,6 +8,8 @@ pub fn parse(String) -> Result[Array[Array[String]], String]
 
 pub fn parse_table(String, Bool) -> Result[CsvTable, String]
 
+pub fn parse_with_options(String, strict~ : Bool) -> Result[Array[Array[String]], String]
+
 pub fn serialize(Array[Array[String]]) -> String
 
 // Errors

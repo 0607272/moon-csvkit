@@ -37,6 +37,14 @@ test "rejects inconsistent column counts" {
 }
 
 ///|
+test "permissive mode keeps inconsistent rows" {
+  assert_eq(
+    @moon-csvkit.parse_with_options("a,b\n1\n", strict=false),
+    Ok([["a", "b"], ["1"]]),
+  )
+}
+
+///|
 test "maps header row into JSON Lines" {
   let table = @moon-csvkit.parse_table("name,age\nAda,36\n", true)
   let parsed = table.unwrap()
