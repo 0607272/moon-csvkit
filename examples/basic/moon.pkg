@@ -1,0 +1,5 @@
+import {
+  "0607272/moon-csvkit" @csvkit,
+}
+
+pkgtype(kind: "executable")
