@@ -2,13 +2,22 @@
 package "0607272/moon-csvkit"
 
 // Values
+pub fn from_jsonl(String, Array[String]) -> Result[Array[Array[String]], String]
+
 pub fn parse(String) -> Result[Array[Array[String]], String]
+
+pub fn parse_table(String, Bool) -> Result[CsvTable, String]
 
 pub fn serialize(Array[Array[String]]) -> String
 
 // Errors
 
 // Types and methods
+pub struct CsvTable {
+  headers : Array[String]
+  rows : Array[Array[String]]
+}
+pub fn CsvTable::to_jsonl(Self) -> Result[String, String]
 
 // Type aliases
 pub type CsvError = String

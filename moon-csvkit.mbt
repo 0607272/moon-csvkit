@@ -3,6 +3,97 @@
 pub type CsvError = String
 
 ///|
+/// A CSV table with a stable header order.
+pub struct CsvTable {
+  headers : Array[String]
+  rows : Array[Array[String]]
+}
+
+///|
+/// Parse CSV rows and optionally use the first row as headers.
+pub fn parse_table(
+  input : String,
+  has_header : Bool,
+) -> Result[CsvTable, CsvError] {
+  match parse(input) {
+    Err(error) => Err(error)
+    Ok(parsed) =>
+      if has_header {
+        if parsed.length() == 0 {
+          return Ok({ headers: [], rows: [], })
+        }
+        let data = []
+        let mut i = 1
+        while i < parsed.length() {
+          data.push(parsed[i])
+          i += 1
+        }
+        Ok({ headers: parsed[0], rows: data, })
+      } else {
+        let headers = Array::makei(
+          if parsed.length() == 0 {
+            0
+          } else {
+            parsed[0].length()
+          },
+          i => "column_" + (i + 1).to_string(),
+        )
+        Ok({ headers, rows: parsed, })
+      }
+  }
+}
+
+///|
+/// Convert each data row to a JSON object using the table headers.
+pub fn CsvTable::to_jsonl(self : CsvTable) -> Result[String, CsvError] {
+  let output = StringBuilder()
+  for row in self.rows {
+    let object = Map([])
+    for i, header in self.headers {
+      if i < row.length() {
+        object[header] = Json::string(row[i])
+      }
+    }
+    output.write_string(Json::object(object).stringify())
+    output.write_char('\n')
+  }
+  Ok(output.to_string())
+}
+
+///|
+/// Convert JSON objects, one per line, into rows in the requested header order.
+pub fn from_jsonl(
+  input : String,
+  headers : Array[String],
+) -> Result[Array[Array[String]], CsvError] {
+  let rows = []
+  for line_view in input.split("\n") {
+    let line = line_view.to_owned()
+    if line == "" {
+      continue
+    }
+    let value = @json.parse(line) catch { _ => return Err("invalid JSON line") }
+    let object = match value {
+      Object(object) => object
+      _ => return Err("JSON line must be an object")
+    }
+    let row = []
+    for header in headers {
+      match object.get(header) {
+        Some(field) =>
+          match field {
+            String(text) => row.push(text)
+            _ => return Err("JSON fields must be strings")
+          }
+        None => return Err("missing JSON field")
+      }
+    }
+    rows.push(row)
+  }
+  Ok(rows)
+}
+
+///|
 /// Parse a basic comma-separated document into rows.
 pub fn parse(input : String) -> Result[Array[Array[String]], CsvError] {
   let chars = input.to_array()
@@ -74,6 +165,14 @@ pub fn parse(input : String) -> Result[Array[Array[String]], CsvError] {
   if after_quote || !field.is_empty() || row.length() > 0 {
     row.push(field.to_string())
     rows.push(row)
+  }
+  if rows.length() > 0 {
+    let expected = rows[0].length()
+    for parsed_row in rows {
+      if parsed_row.length() != expected {
+        return Err("inconsistent column count")
+      }
+    }
   }
   Ok(rows)
 }

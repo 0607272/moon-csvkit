@@ -1,5 +1,6 @@
-// import {
-//   "username/moon-csvkit" @lib,
-// }
+import {
+  "0607272/moon-csvkit" @lib,
+  "moonbitlang/core/env",
+}
 
 pkgtype(kind: "executable")

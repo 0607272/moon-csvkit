@@ -30,5 +30,28 @@ test "rejects unterminated quoted fields" {
 test "preserves empty fields" {
   assert_eq(@moon-csvkit.parse("a,,c\n"), Ok([["a", "", "c"]]))
 }
+
+///|
+test "rejects inconsistent column counts" {
+  assert_true(@moon-csvkit.parse("a,b\n1\n") is Err(_))
+}
+
+///|
+test "maps header row into JSON Lines" {
+  let table = @moon-csvkit.parse_table("name,age\nAda,36\n", true)
+  let parsed = table.unwrap()
+  assert_eq(parsed.headers, ["name", "age"])
+  assert_eq(parsed.rows, [["Ada", "36"]])
+  let jsonl = parsed.to_jsonl()
+  assert_eq(jsonl, Ok("{\"name\":\"Ada\",\"age\":\"36\"}\n"))
+}
+
+///|
+test "converts JSON Lines back to CSV rows" {
+  let result = @moon-csvkit.from_jsonl("{\"age\":\"36\",\"name\":\"Ada\"}\n", [
+    "name", "age",
+  ])
+  assert_eq(result, Ok([["Ada", "36"]]))
+}
 // Prefer high-level behaviors over implementation details.
 // Run `moon test` to execute and `moon test --update` to refresh snapshots.
