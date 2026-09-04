@@ -61,5 +61,21 @@ test "converts JSON Lines back to CSV rows" {
   ])
   assert_eq(result, Ok([["Ada", "36"]]))
 }
+
+///|
+test "rejects malformed JSON Lines" {
+  assert_eq(
+    @moon-csvkit.from_jsonl("not-json\n", ["name"]),
+    Err("invalid JSON line"),
+  )
+}
+
+///|
+test "rejects JSON Lines with missing headers" {
+  assert_eq(
+    @moon-csvkit.from_jsonl("{\"name\":\"Ada\"}\n", ["name", "age"]),
+    Err("missing JSON field"),
+  )
+}
 // Prefer high-level behaviors over implementation details.
 // Run `moon test` to execute and `moon test --update` to refresh snapshots.
