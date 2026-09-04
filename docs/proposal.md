@@ -1,45 +1,44 @@
-# Hackathon 2026 Proposal: NyaCSV Maintenance and Strict Validation
+# MoonBit Hackathon 2026 申报内容
 
-## Project and maintenance direction
+## 1. 项目名称
 
-This submission targets the existing MoonBit community project
-[`moonbit-community/NyaCSV`](https://github.com/moonbit-community/NyaCSV),
-version 0.3.3, under the hackathon direction "existing ecosystem project
-maintenance and upgrade". NyaCSV already provides CSV parsing from strings,
-buffers, and bytes, configurable delimiters and quoting, multiline fields,
-headers, and formatted output. Its README explicitly welcomes issues and pull
-requests.
+NyaCSV 严格 CSV 校验维护
 
-The goal is not to publish a duplicate CSV library. It is to contribute a
-focused strict-validation layer upstream while preserving the existing API and
-behavior.
+## 2. 项目简介
 
-## Maintenance goals during the competition
+NyaCSV 是一个 MoonBit CSV 解析库，支持字符串、Buffer 和字节输入，也支持自定义分隔符、引号字段、多行字段、表头和格式化输出。本项目在现有 NyaCSV 基础上增加严格校验接口，帮助调用者发现格式错误并定位问题。
 
-1. Add `CSV::parse_string_strict`, returning `Result[CSV, CSVParseError]`.
-2. Report malformed quoting and ragged records instead of silently accepting
-   them, with a stable error message and one-based line/column location.
-3. Keep the existing `CSV::parse_string`, `parse_buffer`, and `parse_bytes`
-   APIs compatible for permissive callers.
-4. Add regression tests for unterminated quotes, illegal characters after a
-   closing quote, inconsistent field counts, CRLF, multiline fields, and valid
-   escaped quotes.
-5. Update the upstream README with the strict API and migration guidance.
-6. Publish public, reviewable commits and an upstream Issue/PR; record links
-   and review outcomes here as they become available.
+## 3. 项目方向、通用性说明
 
-## Verification and deliverables
+项目属于“既有生态项目维护与升级”方向。CSV 是数据交换中常见的格式，配置文件、测试数据、导入导出脚本都可能使用它。严格模式不改变原有解析接口，适合需要兼容旧代码、同时又要检查输入质量的 MoonBit 项目。
 
-- MoonBit source and tests are the primary implementation.
-- `moon fmt --check`, `moon test`, `moon build`, and CI are required before
-  submitting the PR.
-- The contribution retains NyaCSV's Apache-2.0 license and does not copy code
-  from unrelated CSV projects.
-- The local `moon-csvkit` repository is only a reproducible work log and
-  validation harness; the actual feature is prepared as a patch against NyaCSV
-  for upstream review.
+## 4. 预期使用场景
 
-## Out of scope
+1. 导入用户上传的 CSV 前，检查未闭合引号和列数不一致，避免错误数据进入后续处理。
+2. 在数据清洗脚本中读取含有逗号、换行或双引号的字段，并在输入异常时显示行号和列号。
+3. 在 CI 中校验项目内的 CSV 测试数据，发现格式改动后直接给出失败位置。
+4. 在 MoonBit 应用中保留原有宽松解析，同时对需要可靠性的文件选择严格解析。
 
-No new CSV package, SQL engine, network service, GUI, type inference system,
-or unrelated refactor is proposed.
+## 5. 拟实现的核心功能
+
+- 新增 `CSV::parse_string_strict`，返回 `Result[CSV, CSVParseError]`。
+- 检查未闭合引号、闭合引号后的非法字符和记录列数不一致。
+- 错误对象包含说明文字，以及从 1 开始计算的行号、列号。
+- 增加 CRLF、多行字段、转义引号和异常输入测试。
+- 更新 README、示例和 CI，保持原有 `parse_string`、`parse_buffer`、`parse_bytes` 接口兼容。
+
+## 6. 项目来源
+
+本项目不是原创的新 CSV 库，也不是移植项目。它是对已有开源项目 NyaCSV 的独立维护贡献，主要工作由本人完成。
+
+## 7. 参考项目、来源链接和许可证
+
+- 项目：NyaCSV
+- 来源：<https://github.com/moonbit-community/NyaCSV>
+- 许可证：Apache-2.0
+
+## 8. GitHub 仓库
+
+<https://github.com/0607272/moon-csvkit>
+
+该仓库包含 README、示例、测试、CI 和公开开发记录，目前已有超过 10 个有实际内容的 commits。NyaCSV 维护分支和后续 Issue/PR 将在上游仓库公开记录。
