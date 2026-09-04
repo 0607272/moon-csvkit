@@ -31,6 +31,6 @@ separate compatibility commit before opening the upstream PR.
 
 ## External actions pending
 
-- Create an upstream Issue describing strict validation.
+- Upstream Issue created: https://github.com/moonbit-community/NyaCSV/issues/17
 - Open a PR after the maintainer confirms the proposed API shape.
 - Record the public Issue/PR links and review outcomes here.
