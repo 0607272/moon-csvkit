@@ -48,6 +48,16 @@ test "rejects inconsistent column counts" {
 }
 
 ///|
+test "parses CRLF records without carriage returns in fields" {
+  assert_eq(@moon-csvkit.parse("a,b\r\n1,2\r\n"), Ok([["a", "b"], ["1", "2"]]))
+}
+
+///|
+test "parses a quoted empty field at end of input" {
+  assert_eq(@moon-csvkit.parse("name\n\"\""), Ok([["name"], [""]]))
+}
+
+///|
 test "permissive mode keeps inconsistent rows" {
   assert_eq(
     @moon-csvkit.parse_with_options("a,b\n1\n", strict=false),
