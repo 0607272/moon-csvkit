@@ -42,3 +42,11 @@ test "command runner reports missing arguments" {
     "usage: moon-csvkit from-jsonl <input> <header1,header2,...>",
   )
 }
+
+///|
+test "from-jsonl command rejects an empty header list" {
+  assert_eq(
+    run(["from-jsonl", "{\"name\":\"Ada\"}\n", ""]),
+    "usage: moon-csvkit from-jsonl <input> <header1,header2,...>",
+  )
+}

@@ -23,7 +23,7 @@ fn run(args : Array[String]) -> String {
           Err(error) => "invalid CSV: " + error
         }
       "from-jsonl" =>
-        if args.length() < 3 {
+        if args.length() < 3 || args[2] == "" {
           "usage: moon-csvkit from-jsonl <input> <header1,header2,...>"
         } else {
           let headers = args[2].split(",").map(x => x.to_owned()).to_array()
