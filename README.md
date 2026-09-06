@@ -12,9 +12,25 @@ CSV is deceptively simple: commas, quotes, and embedded newlines make line-based
 let rows = @moon-csvkit.parse("name,age\nAda,36\n")
 let table = @moon-csvkit.parse_table("name,age\nAda,36\n", true)
 let jsonl = table.unwrap().to_jsonl()
+let semicolon_csv = @moon-csvkit.serialize_with_delimiter(rows.unwrap(), ';')
 ```
 
 The parser supports quoted fields, embedded commas and newlines, doubled quotes, CRLF input, empty fields, and strict column-count validation. JSON Lines conversion currently treats values as strings and preserves the requested header order.
+
+Use `parse_with_options(input, strict=false)` when ragged records must be
+preserved. `serialize_with_delimiter` writes comma-, semicolon-, or other
+character-delimited output while applying the same quoting rules.
+
+## Command line
+
+```text
+moon run cmd/main -- check "name,age\nAda,36\n"
+moon run cmd/main -- format "name,note\nAda,hello\n"
+moon run cmd/main -- to-jsonl "name,age\nAda,36\n"
+moon run cmd/main -- from-jsonl "{\"name\":\"Ada\"}" "name"
+```
+
+Run the library example with `moon run examples/basic`.
 
 ## Development
 
