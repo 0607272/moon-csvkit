@@ -12,6 +12,8 @@ pub fn parse_with_options(String, strict~ : Bool) -> Result[Array[Array[String]]
 
 pub fn serialize(Array[Array[String]]) -> String
 
+pub fn serialize_with_delimiter(Array[Array[String]], Char) -> String
+
 // Errors
 
 // Types and methods
