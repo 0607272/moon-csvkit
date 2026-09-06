@@ -98,5 +98,29 @@ test "rejects JSON Lines with missing headers" {
     Err("missing JSON field"),
   )
 }
+
+///|
+test "rejects JSON Lines values that are not objects" {
+  assert_eq(
+    @moon-csvkit.from_jsonl("[\"Ada\"]\n", ["name"]),
+    Err("JSON line must be an object"),
+  )
+}
+
+///|
+test "rejects non-string JSON fields" {
+  assert_eq(
+    @moon-csvkit.from_jsonl("{\"age\":36}\n", ["age"]),
+    Err("JSON fields must be strings"),
+  )
+}
+
+///|
+test "skips blank JSON Lines records" {
+  assert_eq(
+    @moon-csvkit.from_jsonl("\n{\"name\":\"Ada\"}\n\n", ["name"]),
+    Ok([["Ada"]]),
+  )
+}
 // Prefer high-level behaviors over implementation details.
 // Run `moon test` to execute and `moon test --update` to refresh snapshots.
