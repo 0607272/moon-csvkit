@@ -22,6 +22,17 @@ test "serializes fields that need quoting" {
 }
 
 ///|
+test "serializes rows with a custom delimiter" {
+  assert_eq(
+    @moon-csvkit.serialize_with_delimiter(
+      [["name", "note"], ["Ada", "x;y"]],
+      ';',
+    ),
+    "name;note\nAda;\"x;y\"\n",
+  )
+}
+
+///|
 test "rejects unterminated quoted fields" {
   assert_true(@moon-csvkit.parse("name,\"Ada\n") is Err(_))
 }

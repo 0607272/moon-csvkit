@@ -189,13 +189,22 @@ pub fn parse_with_options(
 ///|
 /// Serialize rows as normalized CSV with a trailing newline.
 pub fn serialize(rows : Array[Array[String]]) -> String {
+  serialize_with_delimiter(rows, ',')
+}
+
+///|
+/// Serialize rows with a caller-selected delimiter.
+pub fn serialize_with_delimiter(
+  rows : Array[Array[String]],
+  delimiter : Char,
+) -> String {
   let output = StringBuilder()
   for row_idx, row in rows {
     for col_idx, field in row {
       if col_idx > 0 {
-        output.write_char(',')
+        output.write_char(delimiter)
       }
-      let needs_quotes = field.contains(",") ||
+      let needs_quotes = field.contains_char(delimiter) ||
         field.contains("\n") ||
         field.contains("\r") ||
         field.contains("\"")
