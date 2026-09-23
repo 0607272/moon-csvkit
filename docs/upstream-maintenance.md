@@ -12,7 +12,7 @@ Target: `moonbit-community/NyaCSV` `0.3.3`
 - Documented the API and the permissive-versus-strict behavior in the README.
 
 The working patch is applied to the local upstream snapshot under
-`.repos/moonbit-community/NyaCSV/0.3.3/`. That snapshot is intentionally
+`.repos/0607272/NyaCSV/`. That snapshot is intentionally
 ignored by the main repository; it mirrors the upstream package used to
 prepare a clean Issue/PR.
 
@@ -26,11 +26,14 @@ Total tests: 3, passed: 3, failed: 0.
 
 The full snapshot currently reports failures in older `inspect` expectations
 because the bundled toolchain renders string arrays without quotation marks.
-The new API compiles successfully; the old snapshots should be refreshed in a
-separate compatibility commit before opening the upstream PR.
+The new API compiles successfully. The upstream PR is open and the maintainer
+can decide whether those legacy snapshots should be refreshed separately.
 
-## External actions pending
+## Public contribution records
 
 - Upstream Issue created: https://github.com/moonbit-community/NyaCSV/issues/17
-- Open a PR after the maintainer confirms the proposed API shape.
-- Record the public Issue/PR links and review outcomes here.
+- Upstream PR opened: https://github.com/moonbit-community/NyaCSV/pull/18
+- PR source branch: `0607272/NyaCSV:codex/strict-validation`
+- PR target branch: `moonbit-community/NyaCSV:main`
+- The PR is open with no merge conflicts; its workflow is awaiting approval
+  from an upstream maintainer because it comes from a public fork.
