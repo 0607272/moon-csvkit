@@ -1,5 +1,9 @@
 # NyaCSV Upstream Maintenance Log
 
+This is a separate ecosystem contribution made during development of
+`moon-csvkit`. NyaCSV is not the code base, upstream source, or submission
+subject of `moon-csvkit`; no NyaCSV code is included in the main project.
+
 Target: `moonbit-community/NyaCSV` `0.3.3`
 
 ## Prepared contribution

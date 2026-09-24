@@ -49,6 +49,12 @@ The project is developed in public with meaningful commits and tests. Contributi
 
 This repository is being developed for the 2026 MoonBit September Hackathon. The current delivery targets a reusable parser, table/JSON Lines codecs, and a thin CLI with reproducible examples and CI.
 
+`moon-csvkit` is an original, independently implemented project. It is not a
+fork, port, or code copy of another CSV library. The separately documented
+[NyaCSV contribution](docs/upstream-maintenance.md) is an additional upstream
+ecosystem contribution and is not the code base or submission subject of this
+project.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
